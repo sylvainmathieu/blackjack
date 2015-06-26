@@ -2,11 +2,41 @@
 <head>
 	<title>Blackjack</title>
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.2/mustache.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script type="text/javascript" src="javascripts/underscore-min.js"></script>
+	<script type="text/javascript" src="javascripts/mustache.min.js"></script>
+	<script type="text/javascript" src="javascripts/game-compiled.js"></script>
+
+	<script id="playerGameTmpl" type="x-tmpl-mustache">
+		{{#players}}
+
+			<div id="{{id}}" class="playerGame">
+
+				<h2>{{name}}</h2>
+
+				<div class="square">
+					{{#cards}}
+						<img src="cards/{{name}}.png" class="card">
+					{{/cards}}
+				</div>
+
+				<div class="score">{{score}}</div>
+
+				<button type="button">Hit</button>
+				<button type="button">Stick</button>
+
+			</div>
+
+		{{/players}}
+	</script>
 
 </head>
 <body>
+
+	<div id="table">
+
+	</div>
 
 </body>
 </html>
