@@ -97,7 +97,7 @@ let getPlayerByName = (playerName) => {
 let getScore = (cards) => {
 
 	// Counting the number of aces for soft hands
-	let nbAces = _.reduce(nbAces, (acc, card) => card.score == 11 ? 1 : 0, 0);
+	let nbAces = _.reduce(cards, (acc, card) => acc + (card.score == 11 ? 1 : 0), 0);
 
 	// Total counting all the aces as 11 points
 	var total = _.reduce(cards, (acc, card) => acc + card.score, 0);
@@ -141,9 +141,13 @@ let displayResults = () => {
 	let players = _.tail(playerGameView.players);
 
 	players.forEach((player) => {
-		if (player.score >= dealer.score && player.score <= 21) {
+		if (player.score > dealer.score && player.score <= 21) {
 			player.resultClass = "win";
 			player.resultLabel = "Win";
+		}
+		else if (player.score == dealer.score) {
+			player.resultClass = "push";
+			player.resultLabel = "Push";
 		}
 		else {
 			player.resultClass = "lose";
