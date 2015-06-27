@@ -101,6 +101,7 @@ let hit = (player) => {
 
 	displayScore(player);
 
+	// Go to the next player if can't take any more cards
 	if (player.score >= 21 && player.type != "dealer") {
 		stick(player);
 	}
