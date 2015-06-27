@@ -40,8 +40,7 @@ let resetPlayerGameView = () => {
 			{ type: "dealer", name: "Dealer", hand: [], currentTurn: "", score: 0 },
 			{ type: "player", name: "Player 1", number: 1, hand: [], currentTurn: "", score: 0 },
 			{ type: "player", name: "Player 2", number: 2, hand: [], currentTurn: "", score: 0 },
-			{ type: "player", name: "Player 3", number: 3, hand: [], currentTurn: "", score: 0 },
-			{ type: "player", name: "Player 4", number: 4, hand: [], currentTurn: "", score: 0 }
+			{ type: "player", name: "Player 3", number: 3, hand: [], currentTurn: "", score: 0 }
 		]
 	};
 };
@@ -72,7 +71,7 @@ let newRound = () => {
 	playerGameView.gameInProgress = true;
 
 	// Select all players (exclude dealer)
-	let players = _.filter(playerGameView.players, (player) => player.type == "player");
+	let players = _.tail(playerGameView.players);
 
 	//  Set first player's turn
 	let firstPlayer = _.first(players)
@@ -136,11 +135,11 @@ let displayResults = () => {
 	let players = _.tail(playerGameView.players);
 
 	players.forEach((player) => {
-		if (player.score > dealer.score && player.score <= 21) {
+		if ((dealer.score > 21 || player.score > dealer.score) && player.score <= 21) {
 			player.resultClass = "win";
 			player.resultLabel = "Win";
 		}
-		else if (player.score == dealer.score) {
+		else if (player.score == dealer.score && player.score <= 21) {
 			player.resultClass = "push";
 			player.resultLabel = "Push";
 		}
@@ -183,7 +182,7 @@ let stick = (player) => {
 		changeTurn(nextPlayer);
 	}
 	else {
-		let dealer = _.findWhere(playerGameView.players, { type: "dealer" });
+		let dealer = _.first(playerGameView.players)
 		changeTurn(dealer);
 		dealerPlay(dealer);
 	}

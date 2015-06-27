@@ -1,7 +1,136 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+
+body {
+	background-image: url(images/pool_table.png);
+	background-size: 128px;
+	font-size: 12px;
+	font-family: 'Droid Serif';
+	margin: 0;
+}
+
 img.card {
 	width: 70px;
 }
 
-.currentTurn {
-	border: 3px solid #fcc;
+#header {
+	background: rgba(0,0,0,0.2);
+	height: 50px;
+	line-height: 50px;
+	position: relative;
+}
+
+#header h1 {
+	margin-left: 15px;
+	color: #fff;
+}
+
+#header button {
+	position: absolute;
+	top: 50%;
+	margin-top: -15px;
+	right: 15px;
+}
+
+.playerHand {
+	margin: 10px 2%;
+	width: 28%;
+	float: left;
+}
+
+.playerHand h2 {
+	color: #fff;
+	font-weight: 400;
+	opacity: 0.5;
+}
+
+.playerHand.bust h2 {
+	text-decoration: line-through;
+}
+
+.playerHand .square {
+	border: 6px solid rgba(255,255,255,0.3);
+	padding: 10px;
+	min-height: 100px
+}
+
+.playerHand .controls {
+	margin-top: 10px;
+	position: relative;
+}
+.playerHand .buttons {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.playerHand .score {
+	height: 30px;
+	line-height: 30px;
+	font-size: 18px;
+	color: #fff;
+}
+
+.playerHand.push h2,
+.playerHand.win h2,
+.playerHand.blackjack h2 {
+	color: #93DD93;
+	opacity: 1;
+}
+
+.playerHand.push .square,
+.playerHand.win .square,
+.playerHand.blackjack .square {
+	border-color: #93DD93;
+	font-size: 15px
+}
+
+.playerHand.push .result,
+.playerHand.win .result,
+.playerHand.blackjack .result {
+	color: #93DD93;
+	font-size: 15px
+}
+
+.playerHand.bust h2,
+.playerHand.lose h2 {
+	color: #FAE298;
+	opacity: 1;
+}
+
+.playerHand.bust .square,
+.playerHand.lose .square {
+	border-color: #FAE298;
+	font-size: 15px
+}
+
+.playerHand.bust .result,
+.playerHand.lose .result {
+	color: #FAE298;
+	font-size: 15px
+}
+
+.playerHand.player1, .playerHand.player4 {
+	clear: left;
+}
+
+.currentTurn .square {
+	border-color: rgba(255,255,255,0.8);
+}
+.currentTurn h2 {
+	opacity: 0.8;
+}
+
+button {
+	background: rgba(0,0,0,0.2);
+	border: 1px solid rgba(0,0,0,0.5);
+	font-family: serif;
+	font-size: 14px;
+	font-family: 'Droid Serif';
+	font-weight: 400;
+	color: rgba(255,255,255,0.9);
+	line-height: 28px;
+	padding: 0 10px;
+	border-radius: 3px;
+	cursor: pointer;
+	outline: 0;
 }
