@@ -9,6 +9,10 @@
 	<script type="text/javascript" src="javascripts/game-compiled.js"></script>
 
 	<script id="playerGameTmpl" type="x-tmpl-mustache">
+		{{^gameInProgress}}
+			<button type="button" onclick="newRoundEvent()">New round</button>
+		{{/gameInProgress}}
+
 		{{#players}}
 
 			<div id="{{id}}" class="playerGame {{currentTurn}} {{scoreClass}} {{resultClass}}">
@@ -41,7 +45,6 @@
 					<button type="button" onclick="stickEvent('{{name}}')">Stick</button>
 				{{/currentTurn}}
 
-
 			</div>
 
 		{{/players}}
@@ -49,12 +52,6 @@
 
 </head>
 <body>
-
-	<button type="button" onclick="newRoundEvent()">New round</button>
-
-	<div id="table">
-
-	</div>
-
+	<div id="table"></div>
 </body>
 </html>

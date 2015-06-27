@@ -37,6 +37,7 @@ var currentPlayer = 0;
 
 let resetPlayerGameView = () => {
 	return {
+		gameInProgress: false,
 		players: [
 			{ type: "dealer", name: "Dealer", hand: [], currentTurn: "", score: 0 },
 			{ type: "player", name: "Player 1", number: 1, hand: [], currentTurn: "", score: 0 },
@@ -73,6 +74,7 @@ let newRound = () => {
 	// Resert the game
 	currentPlayer = 0
 	playerGameView = resetPlayerGameView()
+	playerGameView.gameInProgress = true;
 
 	// Select all players (exclude dealer)
 	let players = _.filter(playerGameView.players, (player) => player.type == "player");
@@ -172,6 +174,7 @@ let dealerPlay = (dealer) => {
 	dealerHitUntilEnough(dealer);
 	displayScore(dealer);
 	displayResults();
+	playerGameView.gameInProgress = false;
 	refreshGameView();
 }
 
