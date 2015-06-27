@@ -11,7 +11,7 @@
 	<script id="playerGameTmpl" type="x-tmpl-mustache">
 		{{#players}}
 
-			<div id="{{id}}" class="playerGame {{currentTurn}}">
+			<div id="{{id}}" class="playerGame {{currentTurn}} {{scoreClass}} {{resultClass}}">
 
 				<h2>{{name}}</h2>
 
@@ -22,13 +22,25 @@
 				</div>
 
 				{{#score}}
-					<div class="score">{{score}}</div>
+					<div class="score">
+						{{score}}
+						{{#scoreLabel}}
+						- {{scoreLabel}}
+						{{/scoreLabel}}
+					</div>
 				{{/score}}
+
+				{{#resultLabel}}
+					<div class="result">
+						{{resultLabel}}
+					</div>
+				{{/resultLabel}}
 
 				{{#currentTurn}}
 					<button type="button" onclick="hitEvent('{{name}}')">Hit</button>
 					<button type="button" onclick="stickEvent('{{name}}')">Stick</button>
 				{{/currentTurn}}
+
 
 			</div>
 

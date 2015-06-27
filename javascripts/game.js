@@ -54,7 +54,9 @@ let changeTurn = (player) => {
 	playerGameView.players.forEach((player) => {
 		player.currentTurn = ""
 	});
-	player.currentTurn = "currentTurn";
+	if (player.type != "dealer") {
+		player.currentTurn = "currentTurn";
+	}
 }
 
 let newRound = () => {
@@ -66,12 +68,12 @@ let newRound = () => {
 	// Give two cards to every player
 	players.forEach((player) => {
 		_(2).times(() => {
-			hit(player.name);
+			hit(player);
 		});
 	});
 
 	// Set first player's turn
-	changeTurn(_.first(players))
+	changeTurn(_.first(players));
 }
 
 let newRoundEvent = () => {
@@ -79,38 +81,115 @@ let newRoundEvent = () => {
 	refreshGameView();
 };
 
-let hit = (playerName) => {
+let getPlayerByName = (playerName) => {
+	return _.findWhere(playerGameView.players, { name: playerName })
+}
+
+let getScore = (cards) => {
+
+	// Counting the number of aces for soft hands
+	let nbAces = _.reduce(nbAces, (acc, card) => card.score == 11 ? 1 : 0, 0);
+
+	// Total counting all the aces as 11 points
+	var total = _.reduce(cards, (acc, card) => acc + card.score, 0);
+
+	// Reducing the score regarding the aces if necessary
+	_(nbAces).times(() => {
+		if (total > 21) {
+			total -= 10;
+		}
+	});
+
+	return total;
+}
+
+let hit = (player) => {
 
 	// Take first card in the deck
 	let card = _.first(deck);
 	deck = _.tail(deck);
 
 	// Add the card to the player's hand
-	var player = _.findWhere(playerGameView.players, { name: playerName });
 	player.hand.push(card);
 
-	player.score += card.score;
+	// Add up score
+	player.score = getScore(player.hand);
 
+	displayScore(player);
+
+	if (player.score >= 21) {
+		stick(player);
+	}
 };
 
 let hitEvent = (playerName) => {
-	hit(playerName);
+	hit(getPlayerByName(playerName));
 	refreshGameView();
 }
 
-let stick = (playerName) => {
-	let player = _.findWhere(playerGameView.players, { number: currentPlayer + 1 });
-	if (player) {
-		changeTurn(player);
+let dealerHitUntilEnough = (dealer) => {
+	if (dealer.score < (21 - 8)) {
+		hit(dealer);
+		dealerHitUntilEnough(dealer);
+	}
+}
+
+let displayResults = () => {
+	let dealer = _.first(playerGameView.players);
+	let players = _.tail(playerGameView.players);
+
+	players.forEach((player) => {
+		if (player.score >= dealer.score && player.score <= 21) {
+			player.resultClass = "win";
+			player.resultLabel = "Win";
+		}
+		else {
+			player.resultClass = "lose";
+			player.resultLabel = "Lose";
+		}
+	});
+}
+
+let displayScore = (player) => {
+	if (player.score == 21) {
+		player.scoreClass = "blackjack";
+		player.scoreLabel = "Blackjack!";
+	}
+	else if (player.score > 21) {
+		player.scoreClass = "bust";
+		player.scoreLabel = "Bust";
+	}
+}
+
+let dealerPlay = (dealer) => {
+
+	// Dealer take two cards
+	_(2).times(() => hit(dealer));
+
+	dealerHitUntilEnough(dealer);
+
+	displayScore(dealer);
+
+	displayResults();
+
+	refreshGameView();
+}
+
+let stick = (player) => {
+
+	let nextPlayer = _.findWhere(playerGameView.players, { number: currentPlayer + 1 });
+	if (nextPlayer) {
+		changeTurn(nextPlayer);
 	}
 	else {
 		let dealer = _.findWhere(playerGameView.players, { type: "dealer" });
 		changeTurn(dealer);
+		dealerPlay(dealer);
 	}
 };
 
 let stickEvent = (playerName) => {
-	stick(playerName);
+	stick(getPlayerByName(playerName));
 	refreshGameView();
 }
 
