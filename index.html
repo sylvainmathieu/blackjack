@@ -11,20 +11,24 @@
 	<script id="playerGameTmpl" type="x-tmpl-mustache">
 		{{#players}}
 
-			<div id="{{id}}" class="playerGame">
+			<div id="{{id}}" class="playerGame {{currentTurn}}">
 
 				<h2>{{name}}</h2>
 
 				<div class="square">
-					{{#cards}}
+					{{#hand}}
 						<img src="cards/{{name}}.png" class="card">
-					{{/cards}}
+					{{/hand}}
 				</div>
 
-				<div class="score">{{score}}</div>
+				{{#score}}
+					<div class="score">{{score}}</div>
+				{{/score}}
 
-				<button type="button">Hit</button>
-				<button type="button">Stick</button>
+				{{#currentTurn}}
+					<button type="button" onclick="hitEvent('{{name}}')">Hit</button>
+					<button type="button" onclick="stickEvent('{{name}}')">Stick</button>
+				{{/currentTurn}}
 
 			</div>
 
@@ -33,6 +37,8 @@
 
 </head>
 <body>
+
+	<button type="button" onclick="newRoundEvent()">New round</button>
 
 	<div id="table">
 

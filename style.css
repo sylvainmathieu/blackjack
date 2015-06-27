@@ -1,0 +1,7 @@
+img.card {
+	width: 70px;
+}
+
+.currentTurn {
+	border: 3px solid #fcc;
+}
