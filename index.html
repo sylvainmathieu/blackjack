@@ -12,7 +12,7 @@
 		<div id="header">
 			<h1>Blackjack</h1>
 			{{^gameInProgress}}
-				<button type="button" onclick="newRoundEvent()">New round</button>
+				<button type="button" onclick="gameEvents.newRound()">New round</button>
 			{{/gameInProgress}}
 		</div>
 
@@ -50,8 +50,8 @@
 
 					{{#currentTurn}}
 						<div class="buttons">
-							<button type="button" onclick="hitEvent('{{name}}')">Hit</button>
-							<button type="button" onclick="stickEvent('{{name}}')">Stick</button>
+							<button type="button" onclick="gameEvents.hit('{{name}}')">Hit</button>
+							<button type="button" onclick="gameEvents.stick('{{name}}')">Stick</button>
 						</div>
 					{{/currentTurn}}
 

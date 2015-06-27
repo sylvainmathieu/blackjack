@@ -1,3 +1,4 @@
+(function () {
 
 let cardRanks = [
 	{ name: "ace", score: 11 },
@@ -54,38 +55,18 @@ let refreshGameView = () => {
 
 let changeTurn = (player) => {
 	playerGameView.players.forEach((player) => {
-		player.currentTurn = ""
+		player.currentTurn = "";
 	});
 
 	if (player.type != "dealer") {
 		player.currentTurn = "currentTurn";
 	}
 
-	_(2).times(() => hit(player))
+	_(2).times(() => hit(player));
 }
-
-let newRound = () => {
-
-	// Resert the game
-	playerGameView = resetPlayerGameView()
-	playerGameView.gameInProgress = true;
-
-	// Select all players (exclude dealer)
-	let players = _.tail(playerGameView.players);
-
-	//  Set first player's turn
-	let firstPlayer = _.first(players)
-	changeTurn(firstPlayer)
-
-}
-
-let newRoundEvent = () => {
-	newRound()
-	refreshGameView();
-};
 
 let getPlayerByName = (playerName) => {
-	return _.findWhere(playerGameView.players, { name: playerName })
+	return _.findWhere(playerGameView.players, { name: playerName });
 }
 
 let getScore = (cards) => {
@@ -124,11 +105,6 @@ let hit = (player) => {
 		stick(player);
 	}
 };
-
-let hitEvent = (playerName) => {
-	hit(getPlayerByName(playerName));
-	refreshGameView();
-}
 
 let displayResults = () => {
 	let dealer = _.first(playerGameView.players);
@@ -182,18 +158,48 @@ let stick = (player) => {
 		changeTurn(nextPlayer);
 	}
 	else {
-		let dealer = _.first(playerGameView.players)
+		let dealer = _.first(playerGameView.players);
 		changeTurn(dealer);
 		dealerPlay(dealer);
 	}
 };
 
-let stickEvent = (playerName) => {
-	stick(getPlayerByName(playerName));
-	refreshGameView();
-}
+let newRound = () => {
+
+	// Resert the game
+	playerGameView = resetPlayerGameView();
+	playerGameView.gameInProgress = true;
+
+	// Select all players (exclude dealer)
+	let players = _.tail(playerGameView.players);
+
+	//  Set first player's turn
+	let firstPlayer = _.first(players);
+	changeTurn(firstPlayer);
+
+};
+
+window.gameEvents = {
+
+	stick: (playerName) => {
+		stick(getPlayerByName(playerName));
+		refreshGameView();
+	},
+
+	hit: (playerName) => {
+		hit(getPlayerByName(playerName));
+		refreshGameView();
+	},
+
+	newRound: () => {
+		newRound();
+		refreshGameView();
+	}
+
+};
 
 window.onload = () => {
 	refreshGameView();
 };
 
+})();
