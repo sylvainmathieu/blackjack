@@ -33,8 +33,6 @@ var deck = _.chain(_.range(0, 6))
 	.shuffle()
 	.value();
 
-var currentPlayer = 0;
-
 let resetPlayerGameView = () => {
 	return {
 		gameInProgress: false,
@@ -56,10 +54,6 @@ let refreshGameView = () => {
 };
 
 let changeTurn = (player) => {
-	currentPlayer++
-
-	_(2).times(() => hit(player))
-
 	playerGameView.players.forEach((player) => {
 		player.currentTurn = ""
 	});
@@ -67,12 +61,13 @@ let changeTurn = (player) => {
 	if (player.type != "dealer") {
 		player.currentTurn = "currentTurn";
 	}
+
+	_(2).times(() => hit(player))
 }
 
 let newRound = () => {
 
 	// Resert the game
-	currentPlayer = 0
 	playerGameView = resetPlayerGameView()
 	playerGameView.gameInProgress = true;
 
@@ -183,7 +178,7 @@ let dealerPlay = (dealer) => {
 }
 
 let stick = (player) => {
-	let nextPlayer = _.findWhere(playerGameView.players, { number: currentPlayer + 1 });
+	let nextPlayer = _.findWhere(playerGameView.players, { number: player.number + 1 });
 	if (nextPlayer) {
 		changeTurn(nextPlayer);
 	}
@@ -199,11 +194,7 @@ let stickEvent = (playerName) => {
 	refreshGameView();
 }
 
-let gameLoop = () => {
-	refreshGameView();
-};
-
 window.onload = () => {
-	gameLoop();
+	refreshGameView();
 };
 
