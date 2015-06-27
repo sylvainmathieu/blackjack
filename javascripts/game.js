@@ -33,16 +33,21 @@ var deck = _.chain(_.range(0, 6))
 	.shuffle()
 	.value();
 
-var currentPlayer = 0
-var playerGameView = {
-	players: [
-		{ type: "dealer", name: "Dealer", hand: [], currentTurn: "", score: 0 },
-		{ type: "player", name: "Player 1", number: 1, hand: [], currentTurn: "", score: 0 },
-		{ type: "player", name: "Player 2", number: 2, hand: [], currentTurn: "", score: 0 },
-		{ type: "player", name: "Player 3", number: 3, hand: [], currentTurn: "", score: 0 },
-		{ type: "player", name: "Player 4", number: 4, hand: [], currentTurn: "", score: 0 }
-	]
+var currentPlayer = 0;
+
+let resetPlayerGameView = () => {
+	return {
+		players: [
+			{ type: "dealer", name: "Dealer", hand: [], currentTurn: "", score: 0 },
+			{ type: "player", name: "Player 1", number: 1, hand: [], currentTurn: "", score: 0 },
+			{ type: "player", name: "Player 2", number: 2, hand: [], currentTurn: "", score: 0 },
+			{ type: "player", name: "Player 3", number: 3, hand: [], currentTurn: "", score: 0 },
+			{ type: "player", name: "Player 4", number: 4, hand: [], currentTurn: "", score: 0 }
+		]
+	};
 };
+
+var playerGameView = resetPlayerGameView();
 
 let refreshGameView = () => {
 	let playerGameTmpl = document.getElementById("playerGameTmpl").innerHTML;
@@ -51,29 +56,31 @@ let refreshGameView = () => {
 
 let changeTurn = (player) => {
 	currentPlayer++
+
+	_(2).times(() => hit(player))
+
 	playerGameView.players.forEach((player) => {
 		player.currentTurn = ""
 	});
+
 	if (player.type != "dealer") {
 		player.currentTurn = "currentTurn";
 	}
 }
 
 let newRound = () => {
+
+	// Resert the game
 	currentPlayer = 0
+	playerGameView = resetPlayerGameView()
 
 	// Select all players (exclude dealer)
 	let players = _.filter(playerGameView.players, (player) => player.type == "player");
 
-	// Give two cards to every player
-	players.forEach((player) => {
-		_(2).times(() => {
-			hit(player);
-		});
-	});
+	//  Set first player's turn
+	let firstPlayer = _.first(players)
+	changeTurn(firstPlayer)
 
-	// Set first player's turn
-	changeTurn(_.first(players));
 }
 
 let newRoundEvent = () => {
@@ -117,7 +124,7 @@ let hit = (player) => {
 
 	displayScore(player);
 
-	if (player.score >= 21) {
+	if (player.score >= 21 && player.type != "dealer") {
 		stick(player);
 	}
 };
@@ -125,13 +132,6 @@ let hit = (player) => {
 let hitEvent = (playerName) => {
 	hit(getPlayerByName(playerName));
 	refreshGameView();
-}
-
-let dealerHitUntilEnough = (dealer) => {
-	if (dealer.score < (21 - 8)) {
-		hit(dealer);
-		dealerHitUntilEnough(dealer);
-	}
 }
 
 let displayResults = () => {
@@ -161,22 +161,21 @@ let displayScore = (player) => {
 	}
 }
 
+let dealerHitUntilEnough = (dealer) => {
+	if (dealer.score < (21 - 5)) {
+		hit(dealer);
+		dealerHitUntilEnough(dealer);
+	}
+}
+
 let dealerPlay = (dealer) => {
-
-	// Dealer take two cards
-	_(2).times(() => hit(dealer));
-
 	dealerHitUntilEnough(dealer);
-
 	displayScore(dealer);
-
 	displayResults();
-
 	refreshGameView();
 }
 
 let stick = (player) => {
-
 	let nextPlayer = _.findWhere(playerGameView.players, { number: currentPlayer + 1 });
 	if (nextPlayer) {
 		changeTurn(nextPlayer);
