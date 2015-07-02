@@ -1,6 +1,6 @@
 (function () {
 
-let cardRanks = [
+const cardRanks = [
 	{ name: "ace", score: 11 },
 	{ name: "2", score: 2 },
 	{ name: "3", score: 3 },
@@ -15,10 +15,10 @@ let cardRanks = [
 	{ name: "king", score: 10 }
 ];
 
-let cardSuits = ["clubs", "diamonds", "hearts", "spades"];
+const cardSuits = ["clubs", "diamonds", "hearts", "spades"];
 
 // Generate the name of the cards corresponding the png images and associate the score to each card
-let deckCards = _.flatten(cardRanks.map((rank) => {
+const deckCards = _.flatten(cardRanks.map((rank) => {
 	return cardSuits.map((suit) => {
 		return {
 			name: `${rank.name}_of_${suit}`,
@@ -28,13 +28,13 @@ let deckCards = _.flatten(cardRanks.map((rank) => {
 }));
 
 // Create the final deck using 6 card deck and shuffle the cards
-var deck = _.chain(_.range(0, 6))
+let deck = _.chain(_.range(0, 6))
 	.map(() => deckCards)
 	.flatten()
 	.shuffle()
 	.value();
 
-let resetPlayerGameView = () => {
+const resetPlayerGameView = () => {
 	return {
 		gameInProgress: false,
 		players: [
@@ -46,14 +46,14 @@ let resetPlayerGameView = () => {
 	};
 };
 
-var playerGameView = resetPlayerGameView();
+let playerGameView = resetPlayerGameView();
 
-let refreshGameView = () => {
-	let playerGameTmpl = document.getElementById("playerGameTmpl").innerHTML;
+const refreshGameView = () => {
+	const playerGameTmpl = document.getElementById("playerGameTmpl").innerHTML;
 	document.getElementById("table").innerHTML = Mustache.render(playerGameTmpl, playerGameView);
 };
 
-let changeTurn = (player) => {
+const changeTurn = (player) => {
 	playerGameView.players.forEach((player) => {
 		player.currentTurn = "";
 	});
@@ -65,17 +65,17 @@ let changeTurn = (player) => {
 	_(2).times(() => hit(player));
 }
 
-let getPlayerByName = (playerName) => {
+const getPlayerByName = (playerName) => {
 	return _.findWhere(playerGameView.players, { name: playerName });
 }
 
-let getScore = (cards) => {
+const getScore = (cards) => {
 
 	// Counting the number of aces for soft hands
-	let nbAces = _.reduce(cards, (acc, card) => acc + (card.score == 11 ? 1 : 0), 0);
+	const nbAces = _.reduce(cards, (acc, card) => acc + (card.score == 11 ? 1 : 0), 0);
 
 	// Total counting all the aces as 11 points
-	var total = _.reduce(cards, (acc, card) => acc + card.score, 0);
+	let total = _.reduce(cards, (acc, card) => acc + card.score, 0);
 
 	// Reducing the score regarding the aces if necessary
 	_(nbAces).times(() => {
@@ -87,10 +87,10 @@ let getScore = (cards) => {
 	return total;
 }
 
-let hit = (player) => {
+const hit = (player) => {
 
 	// Take first card in the deck
-	let card = _.first(deck);
+	const card = _.first(deck);
 	deck = _.tail(deck);
 
 	// Add the card to the player's hand
@@ -107,9 +107,9 @@ let hit = (player) => {
 	}
 };
 
-let displayResults = () => {
-	let dealer = _.first(playerGameView.players);
-	let players = _.tail(playerGameView.players);
+const displayResults = () => {
+	const dealer = _.first(playerGameView.players);
+	const players = _.tail(playerGameView.players);
 
 	players.forEach((player) => {
 		if ((dealer.score > 21 || player.score > dealer.score) && player.score <= 21) {
@@ -127,7 +127,7 @@ let displayResults = () => {
 	});
 }
 
-let displayScore = (player) => {
+const displayScore = (player) => {
 	if (player.score == 21) {
 		player.scoreClass = "blackjack";
 		player.scoreLabel = "Blackjack!";
@@ -138,14 +138,14 @@ let displayScore = (player) => {
 	}
 }
 
-let dealerHitUntilEnough = (dealer) => {
+const dealerHitUntilEnough = (dealer) => {
 	if (dealer.score < (21 - 5)) {
 		hit(dealer);
 		dealerHitUntilEnough(dealer);
 	}
 }
 
-let dealerPlay = (dealer) => {
+const dealerPlay = (dealer) => {
 	dealerHitUntilEnough(dealer);
 	displayScore(dealer);
 	displayResults();
@@ -153,29 +153,29 @@ let dealerPlay = (dealer) => {
 	refreshGameView();
 }
 
-let stick = (player) => {
-	let nextPlayer = _.findWhere(playerGameView.players, { number: player.number + 1 });
+const stick = (player) => {
+	const nextPlayer = _.findWhere(playerGameView.players, { number: player.number + 1 });
 	if (nextPlayer) {
 		changeTurn(nextPlayer);
 	}
 	else {
-		let dealer = _.first(playerGameView.players);
+		const dealer = _.first(playerGameView.players);
 		changeTurn(dealer);
 		dealerPlay(dealer);
 	}
 };
 
-let newRound = () => {
+const newRound = () => {
 
 	// Resert the game
 	playerGameView = resetPlayerGameView();
 	playerGameView.gameInProgress = true;
 
 	// Select all players (exclude dealer)
-	let players = _.tail(playerGameView.players);
+	const players = _.tail(playerGameView.players);
 
 	//  Set first player's turn
-	let firstPlayer = _.first(players);
+	const firstPlayer = _.first(players);
 	changeTurn(firstPlayer);
 
 };
