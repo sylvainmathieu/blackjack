@@ -34,7 +34,7 @@ let deck = _.chain(_.range(0, 6))
 	.shuffle()
 	.value();
 
-const resetPlayerGameView = () => {
+function resetPlayerGameView() {
 	return {
 		gameInProgress: false,
 		players: [
@@ -44,16 +44,16 @@ const resetPlayerGameView = () => {
 			{ type: "player", name: "Player 3", number: 3, hand: [], currentTurn: "", score: 0 }
 		]
 	};
-};
+}
 
 let playerGameView = resetPlayerGameView();
 
-const refreshGameView = () => {
+function refreshGameView() {
 	const playerGameTmpl = document.getElementById("playerGameTmpl").innerHTML;
 	document.getElementById("table").innerHTML = Mustache.render(playerGameTmpl, playerGameView);
-};
+}
 
-const changeTurn = (player) => {
+function changeTurn(player) {
 	playerGameView.players.forEach((player) => {
 		player.currentTurn = "";
 	});
@@ -65,11 +65,11 @@ const changeTurn = (player) => {
 	_(2).times(() => hit(player));
 }
 
-const getPlayerByName = (playerName) => {
+function getPlayerByName(playerName) {
 	return _.findWhere(playerGameView.players, { name: playerName });
 }
 
-const getScore = (cards) => {
+function getScore(cards) {
 
 	// Counting the number of aces for soft hands
 	const nbAces = _.reduce(cards, (acc, card) => acc + (card.score == 11 ? 1 : 0), 0);
@@ -87,7 +87,7 @@ const getScore = (cards) => {
 	return total;
 }
 
-const hit = (player) => {
+function hit(player) {
 
 	// Take first card in the deck
 	const card = _.first(deck);
@@ -105,9 +105,9 @@ const hit = (player) => {
 	if (player.score >= 21 && player.type != "dealer") {
 		stick(player);
 	}
-};
+}
 
-const displayResults = () => {
+function displayResults() {
 	const dealer = _.first(playerGameView.players);
 	const players = _.tail(playerGameView.players);
 
@@ -127,7 +127,7 @@ const displayResults = () => {
 	});
 }
 
-const displayScore = (player) => {
+function displayScore(player) {
 	if (player.score == 21) {
 		player.scoreClass = "blackjack";
 		player.scoreLabel = "Blackjack!";
@@ -138,14 +138,14 @@ const displayScore = (player) => {
 	}
 }
 
-const dealerHitUntilEnough = (dealer) => {
+function dealerHitUntilEnough(dealer) {
 	if (dealer.score < (21 - 5)) {
 		hit(dealer);
 		dealerHitUntilEnough(dealer);
 	}
 }
 
-const dealerPlay = (dealer) => {
+function dealerPlay(dealer) {
 	dealerHitUntilEnough(dealer);
 	displayScore(dealer);
 	displayResults();
@@ -153,7 +153,7 @@ const dealerPlay = (dealer) => {
 	refreshGameView();
 }
 
-const stick = (player) => {
+function stick (player) {
 	const nextPlayer = _.findWhere(playerGameView.players, { number: player.number + 1 });
 	if (nextPlayer) {
 		changeTurn(nextPlayer);
@@ -163,9 +163,9 @@ const stick = (player) => {
 		changeTurn(dealer);
 		dealerPlay(dealer);
 	}
-};
+}
 
-const newRound = () => {
+function newRound() {
 
 	// Resert the game
 	playerGameView = resetPlayerGameView();
@@ -178,7 +178,7 @@ const newRound = () => {
 	const firstPlayer = _.first(players);
 	changeTurn(firstPlayer);
 
-};
+}
 
 window.gameEvents = {
 
